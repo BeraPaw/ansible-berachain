@@ -31,6 +31,9 @@ delivering both Beacond and Reth, Geth or Nethermind via Docker.
 
 ## How to use this repository
 
+- ⚠️ Do not run the playbook while the node containers are running. Stop Docker first; running Ansible against live containers can corrupt data, and `reth unwind`
+  currently fails on Berachain builds.
+- Normal operations: start/stop Docker on the dedicated servers to control the node. Only rebuild when needed.
 - Set `execution_client` in the appropriate var file (mainnet, testnet). This will default to `reth` if not set.
 - Update `run_node` to add additional port ACLs if the requirement for off-node RPC calls exists.
 - Init'ing a new node: `ansible-playbook berachain_mainnet.yaml --limit nodename-in-inventory`. The nodes are filtered via inventory groups.
