@@ -2,12 +2,14 @@
 # Berachain Network Consensus (halo) and Execution (reth, geth or nethermind) clients for Berachain Testnet (Bepolia)
 #
 network: berachain
-folder: "/home/{{ ansible_user }}/docker/{{ network }}"
+folder: "/var/lib/{{ network }}"
 custom_port_prefix: 254
 
 # Consensus container client & version
 consensus_container_name: bera-beacond
 consensus_container_version: "{{ consensus_version }}"
+# Consensus logging
+# consensus_log_level: debug
 
 # Consensus Engine Details
 consensus_genesis: https://raw.githubusercontent.com/berachain/beacon-kit/refs/heads/main/testing/networks/{{ execution_chain_id }}/genesis.json
@@ -17,6 +19,9 @@ consensus_config_toml: https://raw.githubusercontent.com/berachain/beacon-kit/re
 
 # Execution container client & version
 execution_container_name: bera-{{ execution_client }}
+# Execution logging (reth uses log.filter, geth uses verbosity)
+# execution_log_filter: debug
+# execution_verbosity: 5
 
 # Execution Engine Details
 execution_genesis: https://raw.githubusercontent.com/berachain/beacon-kit/main/testing/networks/{{ execution_chain_id }}/eth-genesis.json

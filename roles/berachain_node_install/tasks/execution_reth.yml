@@ -2,6 +2,7 @@
 # Init and Configure Bera-reth
 
 - name: Retrieve latest eth-genesis.json
+  become: true
   ansible.builtin.get_url:
     url: "{{ execution_genesis }}"
     dest: "{{ folder }}/{{ execution_container_name }}/eth-genesis.json"
@@ -65,7 +66,6 @@
       - /etc/localtime:/etc/localtime:ro
     command:
       - node
-      - --full
       - --datadir=/data
       - --config=/data/reth.toml
       - --port={{ custom_port_prefix }}03
@@ -73,6 +73,8 @@
       - --nat=extip:{{ public_ip.content | trim }}
       - --chain=/data/eth-genesis.json
       - --bootnodes={{ el_bootnodes_formatted }}
+      # - --log.stdout.filter={{ execution_log_filter }}
+      # - --log.file.filter={{ execution_log_filter }}
       # RPC & ws
       - --http
       - --http.addr=0.0.0.0

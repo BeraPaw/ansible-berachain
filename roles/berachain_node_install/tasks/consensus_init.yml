@@ -87,6 +87,9 @@
         - section: ""
           key: "moniker"
           value: '"{{ network }}"'
+        # - section: ""
+        #   key: "log_level"
+        #   value: '"{{ consensus_log_level }}"'
         # P2P
         - section: "p2p"
           key: "laddr"
@@ -138,6 +141,9 @@
         - section: "beacon-kit"
           key: "chain-spec"
           value: '"{{ consensus_chain_spec | default("mainnet") }}"'
+        # - section: "beacon-kit.logger"
+        #   key: "log-level"
+        #   value: '"{{ consensus_log_level }}"'
         - section: "beacon-kit.engine"
           key: "rpc-dial-url"
           value: '"http://{{ execution_container_name }}:8551"'
