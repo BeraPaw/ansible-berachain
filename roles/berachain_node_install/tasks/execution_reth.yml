@@ -43,6 +43,16 @@
   ansible.builtin.set_fact:
     el_bootnodes_formatted: "{{ el_bootnodes.content | trim | replace('\n', ',') }}"
 
+- name: Format EL trusted nodes if provided
+  ansible.builtin.set_fact:
+    el_trusted_nodes_list: "{{ execution_trusted_nodes | trim | replace('\n', ',') | split(',') | map('trim') | reject('equalto', '') | list }}"
+  when: execution_trusted_nodes | default('') | length > 0
+
+- name: Join EL trusted nodes for client flags
+  ansible.builtin.set_fact:
+    el_trusted_nodes_formatted: "{{ el_trusted_nodes_list | join(',') }}"
+  when: el_trusted_nodes_list is defined and el_trusted_nodes_list | length > 0
+
 - name: Run bera-reth execution container
   community.docker.docker_container:
     name: "{{ execution_container_name }}"
@@ -73,6 +83,7 @@
       - --nat=extip:{{ public_ip.content | trim }}
       - --chain=/data/eth-genesis.json
       - --bootnodes={{ el_bootnodes_formatted }}
+      - "{{ '--trusted-peers=' + el_trusted_nodes_formatted if el_trusted_nodes_formatted is defined and el_trusted_nodes_formatted | length > 0 else omit }}"
       # - --log.stdout.filter={{ execution_log_filter }}
       # - --log.file.filter={{ execution_log_filter }}
       # RPC & ws
@@ -80,11 +91,12 @@
       - --http.addr=0.0.0.0
       - --http.port=8545
       - --http.corsdomain=*
-      - --http.api=eth,net,web3
+      - --http.api=eth,net,web3,debug,trace
       - --ws
       - --ws.addr=0.0.0.0
       - --ws.port=8546
       - --ws.origins=*
+      - --ws.api=eth,net,web3,debug,trace
       # Auth to beacond
       - --authrpc.addr=0.0.0.0
       - --authrpc.port=8551
