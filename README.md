@@ -17,19 +17,37 @@ delivering both Beacond and Reth, Geth or Nethermind via Docker.
 - Assumes docker is installed and all appropriate firewall rules are in place (docker ports will bypass ufw)
 - Utilizes Berachain team provided beacond config files & modifies only necessary components. Therefore if additional chain configurations or tweaks are
   utilized, re-running these playbooks will add/modify those configurations.
-- This repo is entirely impotent and can be re-run indefinitely.
+- This repo is entirely idempotent and can be re-run indefinitely.
 
-## How to setup this repository
+## Quick Deploy Guide
 
-1. Copy inventory file
+1. Copy the inventory template and paste in the values (server IP/user/key path)
 
-   `cp inventory.sample inventory.ini`
+   ```bash
+   cp inventory.sample inventory.ini
+   ```
 
-   Update information in the inventory file. Mostly like you will need to update the server IP and hostname fields, create groups, all that.
+2. Load your SSH key into `ssh-agent` (required if your key has a passphrase)
 
-2. Review the group_vars values for each network, modify Fee Recipient Address
+   ```bash
+   eval "$(ssh-agent -s)"
+   ssh-add ~/.ssh/your_key_name
+   ```
 
-## How to use this repository
+   `ansible_ssh_private_key_file` in `inventory.ini` only tells Ansible which key file to use.
+   `ssh-add` unlocks that key in memory so Ansible can reuse it across SSH connections without repeatedly prompting.
+
+3. Run the playbook
+
+   Mainnet:
+
+   ```bash
+   ansible-playbook berachain_mainnet.yml --limit mainnet-prod -K
+   ```
+
+   `-K` prompts for the sudo password of the `NODE_USER` (the `ansible_user` from `inventory.ini`, e.g. `berachain-node`). This is separate from your SSH key passphrase.
+
+## Operational Notes
 
 - ⚠️ Do not run the playbook while the node containers are running. Stop Docker first; running Ansible against live containers can corrupt data, and `reth unwind`
   currently fails on Berachain builds.

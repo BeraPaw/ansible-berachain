@@ -1,7 +1,10 @@
-[berachain_testnet]
-server1 ansible_host=x.x.x.x
-server2 ansible_host=x.x.x.x
+; Paste your server info into this file, then copy it to inventory.ini if needed:
+;   cp inventory.sample inventory.ini
+;
+; Replace:
+; - ansible_host with your server IP/DNS
+; - ansible_user with the SSH user on the server
+; - ansible_ssh_private_key_file with your local private key path
 
 [berachain_mainnet]
-server3 ansible_host=x.x.x.x
-server4 ansible_host=x.x.x.x
+mainnet-prod ansible_host=<SERVER_IP> ansible_user=<NODE_USER> ansible_ssh_private_key_file=~/.ssh/<YOUR_KEY_NAME>
