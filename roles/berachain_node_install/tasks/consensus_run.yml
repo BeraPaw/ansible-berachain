@@ -20,7 +20,7 @@
       - name: "{{ network }}_net"
     ports:
       # p2p
-      - "{{ custom_port_prefix }}56:{{ custom_port_prefix }}56"
+      - "26656:26656"
       # rpc for monitor (add additional lines for local network access if necessary)
       - "127.0.0.1:{{ custom_port_prefix }}57:26657"
       # beaconkit.node-api (add additional lines for local network access if necessary)

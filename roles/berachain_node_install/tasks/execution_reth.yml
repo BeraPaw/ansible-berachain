@@ -65,8 +65,8 @@
       - name: "{{ network }}_net"
     ports:
       # p2p
-      - "{{ custom_port_prefix }}03:{{ custom_port_prefix }}03/tcp"
-      - "{{ custom_port_prefix }}03:{{ custom_port_prefix }}03/udp"
+      - "30303:30303/tcp"
+      - "30303:30303/udp"
       # rpc (add additional lines for local network access if necessary)
       - 127.0.0.1:{{ custom_port_prefix }}45:8545
       - 127.0.0.1:{{ custom_port_prefix }}46:8546
@@ -78,12 +78,12 @@
       - node
       - --datadir=/data
       - --config=/data/reth.toml
-      - --port={{ custom_port_prefix }}03
-      - --discovery.port={{ custom_port_prefix }}03
+      - --port=30303
+      - --discovery.port=30303
       - --nat=extip:{{ public_ip.content | trim }}
       - --chain=/data/eth-genesis.json
-      - --bootnodes={{ el_bootnodes_formatted }}
-      - "{{ '--trusted-peers=' + el_trusted_nodes_formatted if el_trusted_nodes_formatted is defined and el_trusted_nodes_formatted | length > 0 else omit }}"
+      - --bootnodes=enode://2ec46b2e63d8b2dded191fd55695af9f653a0cc1d5ac40cc3047585eda6e03ae27ccb98d282856c232b3737531e55516af680b36debc5aa94e1f65a29e4eacda@37.27.231.195:59831
+      # - --trusted-peers={{ el_bootnodes_formatted }}
       # - --log.stdout.filter={{ execution_log_filter }}
       # - --log.file.filter={{ execution_log_filter }}
       # RPC & ws
@@ -91,12 +91,12 @@
       - --http.addr=0.0.0.0
       - --http.port=8545
       - --http.corsdomain=*
-      - --http.api=eth,net,web3,debug,trace
+      - --http.api=eth,net,web3,debug,trace,admin
       - --ws
       - --ws.addr=0.0.0.0
       - --ws.port=8546
       - --ws.origins=*
-      - --ws.api=eth,net,web3,debug,trace
+      - --ws.api=eth,net,web3,debug,trace,admin
       # Auth to beacond
       - --authrpc.addr=0.0.0.0
       - --authrpc.port=8551
@@ -106,4 +106,12 @@
       # Necessary for beacond
       - --engine.persistence-threshold=0
       - --engine.memory-block-buffer-target=0
+      # MEV Stuff
+      - --rpc.txfeecap=0
+      - --txpool.pricebump=1
+      - --txpool.max-pending-txns=200000
+      - --txpool.max-new-txns=50000
+      - --txpool.max-account-slots=128
+      - --max-inbound-peers=200
+      - --max-outbound-peers=200
   register: execution_container

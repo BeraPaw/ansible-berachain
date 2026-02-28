@@ -93,19 +93,19 @@
         # P2P
         - section: "p2p"
           key: "laddr"
-          value: '"tcp://0.0.0.0:{{ custom_port_prefix }}56"'
+          value: '"tcp://0.0.0.0:26656"'
         - section: "p2p"
           key: "external_address"
-          value: '"{{ public_ip.content | trim }}:{{ custom_port_prefix }}56"'
+          value: '"{{ public_ip.content | trim }}:26656"'
         - section: "p2p"
           key: "persistent_peers"
           value: '"{{ consensus_persistent_peers | default("") }}"'
         - section: "p2p"
           key: "max_num_inbound_peers"
-          value: "23"
+          value: "30"
         - section: "p2p"
           key: "max_num_outbound_peers"
-          value: "13"
+          value: "20"
         # RPC
         - section: "rpc"
           key: "laddr"
